@@ -27,12 +27,14 @@ function SingleProductPage() {
 
   const [favLoading, setFavLoading] = useState(false);
   const [favcol, setFavcol] = useState(false);
+  const [favID, setFavId] = useState([]);
 
   const fetchAddAndRemoveFav = async (productId) => {
     setFavLoading(true);
     try {
       if (login) {
         await addAndRemoveFav(productId);
+        await fetchFavColour();
         setFavcol(!favcol);
       } else {
         navigate("/login");
@@ -46,28 +48,37 @@ function SingleProductPage() {
   const fetchFavColour = async () => {
     try {
       const data = await getFavColours();
-      setFavcol(data.some((data) => data === id));
+      if (data && data.length > 0) {
+        setFavcol(data?.some((data) => data === id));
+        setFavId(data);
+      } else {
+        setFavcol(false);
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    fetchFavColour();
-  }, [fetchAddAndRemoveFav]);
+    if (login) {
+      fetchFavColour();
+    }
+  }, [login]);
+
+  const fetchSingleProduct = async () => {
+    setLoading(true);
+    try {
+      const product = await singleProduct(id);
+      setProduct([product]);
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    const fetchSingleProduct = async () => {
-      setLoading(true);
-      try {
-        const product = await singleProduct(id);
-        setProduct([product]);
-      } catch (error) {
-        console.log(error);
-      }
-      setLoading(false);
-    };
     fetchSingleProduct();
+    window.scrollTo(0, 0); // Scroll to the top when component mounts
   }, [id]);
 
   useEffect(() => {
@@ -83,10 +94,10 @@ function SingleProductPage() {
             (data) => data._id !== productId
           );
           setRelatedProduct(relatedProducts);
-          console.log(productCategory, "a");
-          console.log(relatedProducts, "b");
-          console.log(productId, "c");
-          console.log(product, "d");
+          // console.log(productCategory, "a");
+          // console.log(relatedProducts, "b");
+          // console.log(productId, "c");
+          // console.log(product, "d");
         } else {
           console.log("No related products found.");
           setRelatedProduct([]);
@@ -220,48 +231,49 @@ function SingleProductPage() {
                   {data?.description}
                 </p>
 
-                <button
-                  className="btn btn-primary mt-3"
-                  disabled={
-                    data?.quantity === 0 || !data?.available || loadingCart
-                  }
-                  onClick={() => fetchAddToCart(data._id)}
-                >
-                  {loadingCart ? (
-                    <>
-                      <span className="me-1"> Add to cart </span>
-                      <Spinner
-                        animation="border"
-                        size="sm"
-                        role="status"
-                        style={{ color: "white" }}
-                      />
-                    </>
+                <div className="mt-3 d-flex">
+                  <button
+                    className="btn btn-primary "
+                    disabled={
+                      data?.quantity === 0 || !data?.available || loadingCart
+                    }
+                    onClick={() => fetchAddToCart(data._id)}
+                  >
+                    {loadingCart ? (
+                      <>
+                        <span className="me-1"> Add to cart </span>
+                        <Spinner
+                          animation="border"
+                          size="sm"
+                          role="status"
+                          style={{ color: "white" }}
+                        />
+                      </>
+                    ) : (
+                      " Add to cart"
+                    )}
+                  </button>
+                  {favLoading ? (
+                    <Spinner
+                      animation="border"
+                      size="md"
+                      role="status"
+                      style={{ color: "black", marginLeft: "20px" }}
+                    />
                   ) : (
-                    " Add to cart"
+                    <FavoriteBorderIcon
+                      style={{
+                        width: "40px",
+                        height: "30px",
+                        borderRadius: "4px",
+                        marginLeft: "20px",
+                        cursor: "pointer",
+                        color: favcol ? "red" : "",
+                      }}
+                      onClick={() => fetchAddAndRemoveFav(data._id)}
+                    />
                   )}
-                </button>
-                {favLoading ? (
-                  <Spinner
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    style={{ color: "white" }}
-                  />
-                ) : (
-                  <FavoriteBorderIcon
-                    style={{
-                      width: "40px",
-                      height: "30px",
-                      borderRadius: "4px",
-                      marginLeft: "20px",
-                      marginTop: "12px",
-                      cursor: "pointer",
-                      color: favcol ? "red" : "",
-                    }}
-                    onClick={() => fetchAddAndRemoveFav(data._id)}
-                  />
-                )}
+                </div>
               </div>
             </div>
           ))}
@@ -277,7 +289,12 @@ function SingleProductPage() {
                 <h3 className="pa">SIMILAR PRODUCTS</h3>
                 <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-md-start mt-5">
                   {relatedProduct.map((product) => (
-                    <ProductBox key={product._id} product={product} />
+                    <ProductBox
+                      key={product._id}
+                      favID={favID}
+                      holeFav={fetchFavColour}
+                      product={product}
+                    />
                   ))}
                 </div>
               </div>

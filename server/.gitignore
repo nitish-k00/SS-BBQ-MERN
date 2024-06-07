@@ -42,7 +42,7 @@ ehthumbs.db
 # Dependency directories
 /.pnp/
 .pnp.js
-package-lock.json
+
 
 # Temporary files
 *.tmp

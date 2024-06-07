@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ProductBox from "../middleware/ProductBox";
-import { getCategory, getProduct } from "../middleware/API";
+import { getCategory, getFavColours, getProduct } from "../middleware/API";
 import {
   Button,
   Container,
@@ -11,6 +11,8 @@ import {
   Box,
 } from "@mui/material";
 import { Slider } from "antd";
+import { useSelector } from "react-redux";
+import { selectUserInfo } from "../redux/slices/userInfo";
 
 function Menu() {
   const [products, setProducts] = useState([]);
@@ -27,6 +29,9 @@ function Menu() {
   const [discount, setDiscount] = useState("");
   const [selectedDiscount, setSelectedDiscount] = useState("");
   const [productSearch, setProductSearch] = useState("");
+  const [favID, setFavId] = useState([]);
+
+  const userData = useSelector(selectUserInfo);
 
   const selectCategory = (cate) => {
     setSelectedCategory(cate === selectedCategory ? "" : cate);
@@ -123,7 +128,7 @@ function Menu() {
       setPriceMax(max);
       setPriceChange(max);
 
-      console.log(setOfDiacountPrice, "d");
+      // console.log(setOfDiacountPrice, "d");
     };
 
     priceRange();
@@ -152,7 +157,23 @@ function Menu() {
     setSelectedDiscount(dis === selectedDiscount ? "" : dis);
   };
 
-  console.log(productFiltered, "s");
+  // console.log(productFiltered, "s");
+
+  const holeFav = async () => {
+    try {
+      const data = await getFavColours();
+      setFavId(data);
+      console.log("called", data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (userData?.login) {
+      holeFav();
+    }
+  }, [userData]);
 
   return (
     <div>
@@ -164,7 +185,6 @@ function Menu() {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-          
           }}
         >
           <CircularProgress />
@@ -173,7 +193,11 @@ function Menu() {
       ) : (
         <Container>
           <Button
-            style={{ backgroundColor: "#f78000", color: "white",fontWeight:"bolder" }}
+            style={{
+              backgroundColor: "#f78000",
+              color: "white",
+              fontWeight: "bolder",
+            }}
             className="ms-2 my-3"
             onClick={() => setFilterOpen(!filterOpen)}
           >
@@ -281,7 +305,12 @@ function Menu() {
 
                 {productFiltered.length !== 0 ? (
                   productFiltered?.map((product) => (
-                    <ProductBox key={product._id} product={product} />
+                    <ProductBox
+                      key={product._id}
+                      product={product}
+                      favID={favID}
+                      holeFav={holeFav}
+                    />
                   ))
                 ) : (
                   <h5>NO PRODUCT FOUND </h5>

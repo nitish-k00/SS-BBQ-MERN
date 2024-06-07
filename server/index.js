@@ -4,6 +4,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
+
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
 
@@ -113,6 +114,10 @@ const cart = require("./routes/cart");
 const favorites = require("./routes/favourite");
 
 // routes
+
+// app.use("/", async (req, res) => {
+//   res.send("welcome");
+// });
 
 app.use("/auth", user);
 app.use("/auth", profile);

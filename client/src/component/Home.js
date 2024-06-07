@@ -6,10 +6,10 @@ import EmailIcon from "@mui/icons-material/Email";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import "../index.css";
 
-import { useDispatch } from "react-redux";
-import { modifyUserInfo } from "../redux/slices/userInfo";
+import { useDispatch, useSelector } from "react-redux";
+import { modifyUserInfo, selectUserInfo } from "../redux/slices/userInfo";
 import islogin from "../middleware/isLogin";
-import { profileInfo, specialProduct } from "../middleware/API";
+import { getFavColours, profileInfo, specialProduct } from "../middleware/API";
 import axios from "axios";
 import ProductBox from "../middleware/ProductBox";
 
@@ -18,12 +18,15 @@ function Home() {
 
   const [specialProducts, setSpecialProducts] = useState([]);
   const [specialProductLoding, setSpecialProductLoding] = useState(false);
+  const [favID, setFavId] = useState([]);
+
+  const userData = useSelector(selectUserInfo);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const decodedJWT = islogin();
-        console.log(decodedJWT);
+        // console.log(decodedJWT);
         if (decodedJWT !== null) {
           const userData = await profileInfo();
           console.log(userData);
@@ -68,6 +71,22 @@ function Home() {
     };
     fetchSepicalProducts();
   }, []);
+
+  const holeFav = async () => {
+    try {
+      const data = await getFavColours();
+      setFavId(data);
+      console.log("called", data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (userData?.login) {
+      holeFav();
+    }
+  }, [userData]);
 
   return (
     <div
@@ -201,7 +220,12 @@ function Home() {
                   <h3 className="pa">SPEICAL OF THE DAY </h3>
                   <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-md-start mt-5">
                     {specialProducts.map((product) => (
-                      <ProductBox key={product._id} product={product} />
+                      <ProductBox
+                        key={product._id}
+                        favID={favID}
+                        holeFav={holeFav}
+                        product={product}
+                      />
                     ))}
                   </div>
                 </div>

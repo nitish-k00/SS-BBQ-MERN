@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
 import ProductBox from "../middleware/ProductBox";
-import { getFav } from "../middleware/API";
+import { getFav, getFavColours } from "../middleware/API";
 import { Button, Container, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { selectUserInfo } from "../redux/slices/userInfo";
+import { useSelector } from "react-redux";
 
 function Favourite() {
   const [productFiltered, setProductFiltered] = useState([]);
+  const [favID, setFavId] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const userData = useSelector(selectUserInfo);
 
   const fetchFav = async () => {
     setLoading(true);
@@ -20,9 +25,22 @@ function Favourite() {
     setLoading(false);
   };
 
+  const holeFav = async () => {
+    try {
+      const data = await getFavColours();
+      setFavId(data);
+      console.log("called", data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    fetchFav();
-  }, []);
+    if (userData?.login) {
+      holeFav();
+      fetchFav();
+    }
+  }, [userData]);
 
   return (
     <div
@@ -77,6 +95,8 @@ function Favourite() {
                 <ProductBox
                   key={product._id}
                   product={product}
+                  favID={favID}
+                  holeFav={holeFav}
                   setProductFiltered={setProductFiltered}
                 />
               ))

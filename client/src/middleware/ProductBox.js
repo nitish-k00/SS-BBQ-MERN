@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUserInfo } from "../redux/slices/userInfo";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { addAndRemoveFav, addToCart, getFavColours } from "./API";
+import { addAndRemoveFav, addToCart } from "./API";
 
-function ProductBox({ product, setProductFiltered }) {
+function ProductBox({ product, favID, holeFav, setProductFiltered }) {
   const { login } = useSelector(selectUserInfo);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -33,8 +33,10 @@ function ProductBox({ product, setProductFiltered }) {
     try {
       if (login) {
         const data = await addAndRemoveFav(productId);
-        setProductFiltered(data);
+        await holeFav();
+        setFavLoading(false);
         setFavcol(!favcol);
+        setProductFiltered(data);
       } else {
         navigate("/login");
       }
@@ -45,12 +47,7 @@ function ProductBox({ product, setProductFiltered }) {
   };
 
   const fetchFavColour = async () => {
-    try {
-      const data = await getFavColours();
-      setFavcol(data.some((data) => data === product._id));
-    } catch (error) {
-      console.log(error);
-    }
+    setFavcol(favID.some((data) => data === product._id));
   };
 
   useEffect(() => {
@@ -125,9 +122,9 @@ function ProductBox({ product, setProductFiltered }) {
             )}
           </div>
 
-          <div>
+          <div className=" d-flex mt-3">
             <button
-              className="btn btn-primary mt-3"
+              className="btn btn-primary "
               disabled={
                 product?.quantity === 0 || !product?.available || loading
               }
@@ -151,9 +148,12 @@ function ProductBox({ product, setProductFiltered }) {
             {favLoading ? (
               <Spinner
                 animation="border"
-                size="sm"
+                size="md"
                 role="status"
-                style={{ color: "white" }}
+                style={{
+                  color: "black",
+                  marginLeft: "20px",
+                }}
               />
             ) : (
               <FavoriteBorderIcon
@@ -162,7 +162,6 @@ function ProductBox({ product, setProductFiltered }) {
                   height: "30px",
                   borderRadius: "4px",
                   marginLeft: "20px",
-                  marginTop: "12px",
                   cursor: "pointer",
                   color: favcol ? "red" : "",
                 }}

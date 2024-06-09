@@ -41,9 +41,10 @@ function ProductTable({ products, setProduct }) {
       setLoading(true);
       try {
         const productData = await getProduct();
-        setProduct(productData);
+        setProduct(Array.isArray(productData) ? productData : []);
       } catch (error) {
         console.log(error);
+        setProduct([]);
       }
       setLoading(false);
     };
@@ -53,7 +54,7 @@ function ProductTable({ products, setProduct }) {
   const fetchDelete = async (id) => {
     setLoadingDelete(true);
     const productData = await deleteProduct(id);
-    setProduct(productData);
+    setProduct(Array.isArray(productData) ? productData : []);
     setLoadingDelete(false);
 
     setDeleteModalOpen(false);

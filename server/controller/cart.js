@@ -1,10 +1,11 @@
 const cartModel = require("../model/cart");
 const productModel = require("../model/product");
+const redisClint = require("../redisClient");
 
 const addToCart = async (req, res) => {
   const userId = req.user._id;
   const { productId } = req.body;
-
+  const cacheCart = `cart${userId}`;
   try {
     const existingUserCart = await cartModel.findOne({ userId });
     const product = await productModel.findById({ _id: productId });
@@ -30,6 +31,9 @@ const addToCart = async (req, res) => {
         existingUserCart.total += product.discountPrice;
       }
       await existingUserCart.save();
+      await existingUserCart.populate("products._id");
+      await redisClint.setEx(cacheCart, 3600, JSON.stringify(existingUserCart));
+
       return res
         .status(200)
         .json({ message: "Products added to cart", existingUserCart });
@@ -38,6 +42,8 @@ const addToCart = async (req, res) => {
       const total = product.discountPrice;
       const newUser = new cartModel({ userId, products: [newProduct], total });
       newUser.save();
+      await newUser.populate("products._id");
+      await redisClint.setEx(cacheCart, 3600, JSON.stringify(newUser));
       return res
         .status(200)
         .json({ message: "Products added to cart", newUser });
@@ -50,10 +56,21 @@ const addToCart = async (req, res) => {
 
 const getCart = async (req, res) => {
   const userId = req.user._id;
+  const cacheCart = `cart${userId}`;
   try {
+    const data = await redisClint.get(cacheCart);
+    if (data !== null) {
+      return res
+        .status(200)
+        .json({ message: "Products resived", cartProduct: JSON.parse(data) });
+    }
+
     const cartProduct = await cartModel
       .findOne({ userId })
       .populate("products._id");
+
+    await redisClint.setEx(cacheCart, 3600, JSON.stringify(cartProduct));
+
     return res.status(200).json({ message: "Products resived", cartProduct });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
@@ -64,6 +81,7 @@ const getCart = async (req, res) => {
 const Quantity = async (req, res) => {
   const userId = req.user._id;
   const { productId, quantity } = req.body;
+  const cacheCart = `cart${userId}`;
 
   try {
     const cart = await cartModel.findOne({ userId }).populate("products._id");
@@ -85,6 +103,7 @@ const Quantity = async (req, res) => {
     }, 0);
 
     await cart.save();
+    await redisClint.setEx(cacheCart, 3600, JSON.stringify(cart));
     res.status(200).json({ message: "Quantity updated successfully", cart });
   } catch (error) {
     console.error(error);
@@ -95,6 +114,7 @@ const Quantity = async (req, res) => {
 const removeFromCart = async (req, res) => {
   const { productId } = req.params;
   const userId = req.user._id;
+  const cacheCart = `cart${userId}`;
 
   try {
     const userCart = await cartModel
@@ -118,6 +138,7 @@ const removeFromCart = async (req, res) => {
     userCart.products.splice(productIndex, 1);
 
     await userCart.save();
+    await redisClint.setEx(cacheCart, 3600, JSON.stringify(userCart));
     return res
       .status(200)
       .json({ message: "Product removed from cart", cart: userCart });

@@ -104,23 +104,31 @@ function Cart() {
           {cartValue?.products?.length === 0 ||
           cartValue?.length === 0 ||
           cartValue === null ? (
-            <Grid container justifyContent="center" style={{ height: "100vh" }}>
-              <Grid item>
-                <Typography
-                  variant="h5"
-                  align="center"
-                  style={{ color: "white", marginTop: "200px" }}
+            <div
+              style={{
+                height: "95vh",
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <div>
+                <p
+                  style={{
+                    color: "white",
+                    marginTop: "200px",
+                    fontWeight: "bolder",
+                  }}
                 >
                   YOUR STOMACH FEELS EMPTY
-                </Typography>
-                <Button
-                  className="ms-3 mt-3 bg-success d-flex justify-content-center"
-                  onClick={() => navigate("/menu")}
-                >
-                  ADD SOME FOOD
-                </Button>
-              </Grid>
-            </Grid>
+                </p>
+              </div>
+
+              <div>
+                <Button onClick={() => navigate("/menu")}>ADD SOME FOOD</Button>
+              </div>
+            </div>
           ) : (
             <div className="row" style={{ minHeight: "100vh" }}>
               <div className="col-md d-flex flex-column py-4 bg-dark">

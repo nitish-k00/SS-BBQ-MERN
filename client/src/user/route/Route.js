@@ -11,12 +11,20 @@ import Favourite from "../component/Favourite";
 import Four04 from "../component/Four04";
 import Account from "../component/Account";
 //
-import { selectUserInfo } from "../redux/slices/userInfo";
+import { selectUserInfo } from "../../redux/slices/userInfo";
 import { useSelector } from "react-redux";
 import SingleProductPage from "../component/SingleProductPage";
 import PlaceOrder from "../component/PlaceOrder";
 import Payment from "../component/Payment";
-import ProtectedRoute from "../middleware/ProtectedRoute";
+//
+import CartProtrcted from "../protrctedRoute/CartProtrcted";
+import ForgotPasswordProtrcted from "../protrctedRoute/ForgotPasswordProtrcted";
+
+//
+
+import EnterEmail from "../forgotPassword/EnterEmail";
+import EnterNewPassword from "../forgotPassword/EnterNewPassword";
+import EnterOtp from "../forgotPassword/EnterOtp";
 
 function RouteLinks() {
   const { login, role } = useSelector(selectUserInfo);
@@ -47,17 +55,42 @@ function RouteLinks() {
         <Route
           path="/placeorder"
           element={
-            <ProtectedRoute>
+            <CartProtrcted>
               <PlaceOrder />
-            </ProtectedRoute>
+            </CartProtrcted>
           }
         />
         <Route
           path="/payment"
           element={
-            <ProtectedRoute>
+            <CartProtrcted>
               <Payment />
-            </ProtectedRoute>
+            </CartProtrcted>
+          }
+        />
+
+        <Route
+          path="/forgotPassword"
+          element={
+            <ForgotPasswordProtrcted>
+              <EnterEmail />
+            </ForgotPasswordProtrcted>
+          }
+        />
+        <Route
+          path="/forgotPasswordOTP"
+          element={
+            <ForgotPasswordProtrcted>
+              <EnterOtp />
+            </ForgotPasswordProtrcted>
+          }
+        />
+        <Route
+          path="/newPassword"
+          element={
+            <ForgotPasswordProtrcted>
+              <EnterNewPassword />
+            </ForgotPasswordProtrcted>
           }
         />
       </Routes>

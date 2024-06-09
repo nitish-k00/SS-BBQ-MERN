@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import "../index.css";
+import "../../index.css";
 import { Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectUserInfo } from "../redux/slices/userInfo";
+import { selectUserInfo } from "../../redux/slices/userInfo";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { addAndRemoveFav, addToCart } from "./API";
 

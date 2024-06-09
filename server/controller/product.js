@@ -1,6 +1,8 @@
 const cartModel = require("../model/cart");
 const productModel = require("../model/product");
+const redisClient = require("../redisClient");
 
+// Create a product and cache the result
 const createProduct = async (req, res) => {
   const {
     name,
@@ -41,6 +43,9 @@ const createProduct = async (req, res) => {
       .populate("category")
       .sort({ _id: -1 });
 
+    // Cache the products
+    await redisClient.setEx("products", 3600, JSON.stringify(products));
+
     return res
       .status(200)
       .json({ message: "product added successfully", product: products });
@@ -50,6 +55,7 @@ const createProduct = async (req, res) => {
   }
 };
 
+// Update a product and update the cache
 const updateProduct = async (req, res) => {
   const { id } = req.params;
   const {
@@ -106,6 +112,9 @@ const updateProduct = async (req, res) => {
       .populate("category")
       .sort({ _id: -1 });
 
+    // Update the cache
+    await redisClient.setEx("products", 3600, JSON.stringify(products));
+
     return res
       .status(200)
       .json({ message: "product updated successfully", product: products });
@@ -115,6 +124,7 @@ const updateProduct = async (req, res) => {
   }
 };
 
+// Delete a product and update the cache
 const deleteProduct = async (req, res) => {
   const { id } = req.params;
 
@@ -152,6 +162,9 @@ const deleteProduct = async (req, res) => {
       .populate("category")
       .sort({ _id: -1 });
 
+    // Update the cache
+    await redisClient.setEx("products", 3600, JSON.stringify(products));
+
     return res
       .status(200)
       .json({ message: "Product deleted successfully", product: products });
@@ -161,27 +174,56 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+// Retrieve all products and cache the result
 const allProduct = async (req, res) => {
   try {
-    const product = await productModel
-      .find()
-      .populate("category")
-      .sort({ _id: -1 });
-    return res
-      .status(200)
-      .json({ message: "product recived successfully", product });
+    const data = await redisClient.get("products");
+
+    if (data !== null) {
+      return res.status(200).json({
+        message: "product recived successfully",
+        product: JSON.parse(data),
+      });
+    } else {
+      const products = await productModel
+        .find()
+        .populate("category")
+        .sort({ _id: -1 });
+
+      // Cache the products
+      await redisClient.setEx("products", 3600, JSON.stringify(products));
+
+      return res
+        .status(200)
+        .json({ message: "product recived successfully", product: products });
+    }
   } catch (error) {
+    console.log(error);
     return res.status(501).json({ message: "internal server error" });
   }
 };
 
+// Retrieve a single product
 const singleProduct = async (req, res) => {
   const { id } = req.params;
+  const cacheSingleProduct = `singleProduct${id}`;
 
   try {
     const product = await productModel.findById(id).populate("category");
 
+    const data = await redisClient.get(cacheSingleProduct);
+    if (data !== null) {
+      return res.status(200).json({
+        message: "product recived successfully",
+        product: JSON.parse(data),
+      });
+    }
     if (product) {
+      await redisClient.setEx(
+        cacheSingleProduct,
+        3600,
+        JSON.stringify(product)
+      );
       return res
         .status(200)
         .json({ message: "product recived successfully", product });
@@ -192,12 +234,16 @@ const singleProduct = async (req, res) => {
   }
 };
 
-// related product
+// Retrieve products by category
 const CategoryProduct = async (req, res) => {
   const { name } = req.params;
 
   try {
-    const products = await productModel.find({}).populate("category");
+    const products = await productModel
+      .find()
+      .populate("category")
+      .sort({ _id: -1 })
+      .limit(4);
     const CategoryProduct = products.filter((data) => {
       return data.category.name.toLowerCase() === name.toLowerCase();
     });
@@ -218,12 +264,15 @@ const CategoryProduct = async (req, res) => {
   }
 };
 
+// Retrieve special products
 const specialProduct = async (req, res) => {
   try {
     const product = await productModel
       .find({ special: true })
       .populate("category")
-      .sort({ _id: -1 });
+      .sort({ _id: -1 })
+      .limit(4);
+
     return res
       .status(200)
       .json({ message: "product recived successfully", product });

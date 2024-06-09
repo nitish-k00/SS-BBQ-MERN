@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 
-const ProtectedRoute = ({ children }) => {
+function CartProtrcted({ children }) {
   const location = useLocation();
   //   console.log(location);
   //   console.log(location.state);
@@ -13,6 +13,6 @@ const ProtectedRoute = ({ children }) => {
   } else {
     return <Navigate to="/cart" />;
   }
-};
+}
 
-export default ProtectedRoute;
+export default CartProtrcted;

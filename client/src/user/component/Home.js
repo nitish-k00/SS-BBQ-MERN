@@ -4,10 +4,10 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import EmailIcon from "@mui/icons-material/Email";
 import { Box, CircularProgress, Typography } from "@mui/material";
-import "../index.css";
+import "../../index.css";
 
 import { useDispatch, useSelector } from "react-redux";
-import { modifyUserInfo, selectUserInfo } from "../redux/slices/userInfo";
+import { modifyUserInfo, selectUserInfo } from "../../redux/slices/userInfo";
 import islogin from "../middleware/isLogin";
 import { getFavColours, profileInfo, specialProduct } from "../middleware/API";
 import axios from "axios";

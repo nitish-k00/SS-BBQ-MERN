@@ -15,7 +15,7 @@ import { FullscreenControl } from "react-leaflet-fullscreen";
 import "leaflet.fullscreen/Control.FullScreen.css";
 import { Spinner } from "react-bootstrap";
 
-import { selectUserInfo } from "../redux/slices/userInfo";
+import { selectUserInfo } from "../../redux/slices/userInfo";
 import { useSelector } from "react-redux";
 
 // Fixing marker icons issue in leaflet

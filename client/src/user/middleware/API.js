@@ -96,8 +96,10 @@ const addToCart = async (productId) => {
 const getCart = async () => {
   try {
     const { data } = await axios.get("http://localhost:8000/auth/carts");
+    console.log(data.cartProduct);
     return data.cartProduct;
   } catch (error) {
+    console.log(error);
     return [];
   }
 };

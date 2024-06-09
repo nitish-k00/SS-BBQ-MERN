@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Spinner, Alert } from "react-bootstrap";
 import GoogleIcon from "@mui/icons-material/Google";
 import axios from "axios";
-import "../index.css";
+import "../../index.css";
 import { loginValidation } from "../middleware/formValidation";
 function Login() {
   const [userData, setUserData] = useState({
@@ -114,8 +114,9 @@ function Login() {
             <Button
               variant="text"
               color="primary"
-              component={Link}
-              to="/"
+              onClick={() =>
+                navigate("/forgotPassword", { state: { forgotPassword: true } })
+              }
               style={{ marginBottom: "20px" }}
             >
               Forgot Password

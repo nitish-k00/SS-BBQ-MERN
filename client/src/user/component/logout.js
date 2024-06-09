@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Spinner } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { modifyUserInfo } from "../redux/slices/userInfo";
+import { modifyUserInfo } from "../../redux/slices/userInfo";
 import { logout } from "../middleware/API";
 
 function Logout() {
@@ -27,7 +27,11 @@ function Logout() {
   };
   return (
     <div>
-      <Button onClick={onclickLogout} className="bg-danger">
+      <Button
+        onClick={onclickLogout}
+        className="bg-danger"
+        style={{ border: "none", fontWeight: "bold" }}
+      >
         {loading ? (
           <Spinner animation="border" size="sm" role="status" />
         ) : (

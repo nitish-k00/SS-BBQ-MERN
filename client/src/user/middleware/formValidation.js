@@ -19,14 +19,14 @@ const regValidate = (formData, setErrors) => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const errors = {};
 
-  if (!name.trim()) errors.name = "Enter name";
-  if (!email.trim()) errors.email = "Please enter an email. ";
+  if (!name) errors.name = "Enter name";
+  if (!email) errors.email = "Please enter an email. ";
   else if (!emailPattern.test(email))
     errors.email = "Please enter a valid email address.";
-  if (!newpassword.trim()) errors.newpassword = "Enter password";
+  if (!newpassword) errors.newpassword = "Enter password";
   else if (newpassword.length < 6)
     errors.newpassword = "Password must be at least 6 characters";
-  if (!newpassword.trim()) errors.newpassword = "Enter password";
+  if (!newpassword) errors.newpassword = "Enter password";
   if (reenterpassword !== newpassword)
     errors.reenterpassword = "Password not matched";
   setErrors(errors);

@@ -129,14 +129,14 @@ function ProductForm({
 
   const fetchEditProductData = async () => {
     const productData = await editProduct(formData);
-    setProduct(productData);
+    setProduct(Array.isArray(productData) ? productData : []);
     setFormData(formFormat);
     setIsModelOpen(false);
   };
 
   const fetchCreateProductData = async () => {
     const productData = await createProduct(formData);
-    setProduct(productData);
+    setProduct(Array.isArray(productData) ? productData : []);
     setFormData(formFormat);
     setIsModelOpen(false);
     console.log("fihvivt");

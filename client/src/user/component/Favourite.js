@@ -3,7 +3,7 @@ import ProductBox from "../middleware/ProductBox";
 import { getFav, getFavColours } from "../middleware/API";
 import { Button, Container, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { selectUserInfo } from "../redux/slices/userInfo";
+import { selectUserInfo } from "../../redux/slices/userInfo";
 import { useSelector } from "react-redux";
 
 function Favourite() {
@@ -13,6 +13,7 @@ function Favourite() {
   const navigate = useNavigate();
 
   const userData = useSelector(selectUserInfo);
+  // console.log(productFiltered,"p")
 
   const fetchFav = async () => {
     setLoading(true);
@@ -43,15 +44,7 @@ function Favourite() {
   }, [userData]);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: "20px",
-      }}
-    >
+    <div className="mt-5">
       {loading ? (
         <div
           style={{
@@ -90,8 +83,8 @@ function Favourite() {
               justifyContent: "center",
             }}
           >
-            {productFiltered.length !== 0 ? (
-              productFiltered.map((product) => (
+            {productFiltered?.length !== 0 ? (
+              productFiltered?.map((product) => (
                 <ProductBox
                   key={product._id}
                   product={product}

@@ -17,25 +17,21 @@ dotenv.config();
 const PORT = process.env.PORT || 8000;
 
 // Increase the request size limit
-
 app.use(bodyParser.json({ limit: "5mb" }));
 app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
 
 // Set up MongoDB session store
-
 const mongoDBStore = new MongoDBStore({
   uri: process.env.MOONGOSE_URI,
   collection: "sessions",
 });
 
 // Catch session store errors
-
 mongoDBStore.on("error", (error) => {
   console.log(error);
 });
 
 //middle ware
-
 app.use(express.json());
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(cookieParser());
@@ -57,7 +53,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Configure Passport with Google OAuth 2.0 Strategy
-
 passport.use(
   new GoogleStrategy(
     {
@@ -90,7 +85,6 @@ passport.use(
 );
 
 // Serialize and deserialize user for session management
-
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
@@ -105,7 +99,6 @@ passport.deserializeUser(async (id, done) => {
 });
 
 //import routes
-
 const user = require("./routes/user");
 const profile = require("./routes/profile");
 const categoary = require("./routes/category");
@@ -113,12 +106,11 @@ const product = require("./routes/products");
 const cart = require("./routes/cart");
 const favorites = require("./routes/favourite");
 
-// routes
-
 // app.use("/", async (req, res) => {
 //   res.send("welcome");
 // });
 
+// routes
 app.use("/auth", user);
 app.use("/auth", profile);
 app.use("/auth", categoary);
@@ -127,12 +119,10 @@ app.use("/auth", cart);
 app.use("/auth", favorites);
 
 // Database connection
-
 mongoose
   .connect(process.env.MOONGOSE_URI)
   .then(() => console.log("connected to DB"))
   .catch((error) => console.log(error));
 
 // Server listening
-
 app.listen(PORT, () => console.log("server connected to ", { PORT }));

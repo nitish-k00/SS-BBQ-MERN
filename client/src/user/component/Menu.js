@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { Slider } from "antd";
 import { useSelector } from "react-redux";
-import { selectUserInfo } from "../redux/slices/userInfo";
+import { selectUserInfo } from "../../redux/slices/userInfo";
 
 function Menu() {
   const [products, setProducts] = useState([]);

@@ -2,9 +2,9 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { InputGroup, FormControl, Alert } from "react-bootstrap";
 import { Spinner } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-function Otp({ formData }) {
+function EnterOtp() {
   const [otpValues, setOtpValues] = useState(new Array(6).fill(""));
   const [timer, setTimer] = useState(60);
   const [otpExpired, setOtpExpired] = useState(false);
@@ -12,6 +12,12 @@ function Otp({ formData }) {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingGenateOtp, setLoadingGenateOtp] = useState(false);
+
+  //
+
+  const location = useLocation();
+  const EnterdEmail = location.state.email || null;
+  //
 
   const handleOtpChange = (index, value) => {
     const newOtpValues = [...otpValues];
@@ -78,15 +84,16 @@ function Otp({ formData }) {
       setLoading(false);
       return;
     }
-
     try {
       setMessage(""); // Clear previous message
-      const response = await axios.post("http://localhost:8000/auth/register", {
-        ...formData,
-        otp,
-      });
+      const response = await axios.post(
+        "http://localhost:8000/auth/forgotPasswordOtpCheack",
+        {
+          otp: otp,
+        }
+      );
       if (response.status == 200) {
-        navigate("/");
+        navigate("/newPassword", { state: { otp: true } });
       }
     } catch (error) {
       setMessage(error.response.data.message || "An error occurred");
@@ -99,9 +106,12 @@ function Otp({ formData }) {
     e.preventDefault();
     setLoadingGenateOtp(true);
     try {
-      const result = await axios.post("http://localhost:8000/auth/genrateotp", {
-        email: formData.email,
-      });
+      const result = await axios.post(
+        "http://localhost:8000/auth/genrateotpForgotPassword",
+        {
+          email: EnterdEmail,
+        }
+      );
       setMessage("New OTP generated");
       setTimer(60);
       setOtpValues(new Array(6).fill(""));
@@ -119,7 +129,7 @@ function Otp({ formData }) {
       style={{ minHeight: "70vh" }}
     >
       <div className="text-center bg-light p-5">
-        <h1 className="mb-4">ENTER OTP</h1>
+        <h3 className="mb-4"> OTP HAS SENT TO YOUR MAIL</h3>
         {otpExpired ? "" : <p>Time remaining: {formatTime(timer)}</p>}
         <div className="d-flex justify-content-center">
           {otpValues.map((value, index) => (
@@ -183,4 +193,4 @@ function Otp({ formData }) {
   );
 }
 
-export default Otp;
+export default EnterOtp;

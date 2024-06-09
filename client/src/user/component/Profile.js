@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import { editProfile } from "../middleware/API";
 import { Avatar } from "@mui/material";
 import { Button, Container, Spinner } from "react-bootstrap";
-import "../index.css";
-import { modifyUserInfo, selectUserInfo } from "../redux/slices/userInfo";
+import { modifyUserInfo, selectUserInfo } from "../../redux/slices/userInfo";
 import { useDispatch, useSelector } from "react-redux";
 import { Modal } from "antd";
 import EditProfile from "../middleware/profileEditForm";
-import "../index.css"; // Custom CSS file for additional styling
+import "../../index.css";
 
 function Profile() {
   const [userData, setUserData] = useState("");

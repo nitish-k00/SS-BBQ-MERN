@@ -1,7 +1,14 @@
 const express = require("express");
-const { register, login, logout, uiToken } = require("../controller/user");
+const {
+  register,
+  login,
+  logout,
+  uiToken,
+  GetForgotPasswordEmail,
+  forgotPasswordOtpCheack,
+  NewPaaword,
+} = require("../controller/user");
 const { tokenCheck } = require("../midlleware/tokenCheack");
-const { cheackIsAdmin } = require("../midlleware/adminCheack");
 const { generateOTP } = require("../midlleware/genateOtp");
 const passport = require("passport");
 const {
@@ -9,13 +16,18 @@ const {
   refreshTokens,
   uiTokens,
 } = require("../midlleware/setToken");
+const allReadyRegisterd = require("../midlleware/allreadyRegistered");
 const route = express.Router();
 
 route.post("/register", register);
 route.post("/login", login);
-route.post("/genrateotp", generateOTP);
+route.post("/genrateotp", allReadyRegisterd, generateOTP);
 route.post("/logout", tokenCheck, logout);
 route.post("/removeUiToken", uiToken);
+route.post("/GetForgotPasswordEmail", GetForgotPasswordEmail,generateOTP);
+route.post("/forgotPasswordOtpCheack", forgotPasswordOtpCheack);
+route.post("/NewPaaword", NewPaaword);
+route.post("/genrateotpForgotPassword", generateOTP);
 
 route.get(
   "/google",

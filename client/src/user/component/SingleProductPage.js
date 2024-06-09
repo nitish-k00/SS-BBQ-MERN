@@ -11,7 +11,7 @@ import { CircularProgress, Container } from "@mui/material";
 import ProductBox from "../middleware/ProductBox";
 import { Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { selectUserInfo } from "../redux/slices/userInfo";
+import { selectUserInfo } from "../../redux/slices/userInfo";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 function SingleProductPage() {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../index.css";
+import "../../index.css";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -17,7 +17,7 @@ import Logout from "../component/logout";
 
 //
 
-import { selectUserInfo } from "../redux/slices/userInfo";
+import { selectUserInfo } from "../../redux/slices/userInfo";
 import { useSelector } from "react-redux";
 
 const pages = ["MENU", "FAVOURITES", "CART"];
@@ -26,6 +26,8 @@ function NavBar() {
   //
   const { login, avator } = useSelector(selectUserInfo);
   //
+  const location = useLocation();
+  // console.log(location.pathname);
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -113,10 +115,16 @@ function NavBar() {
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">
                     <Link to={page.toLocaleLowerCase()}>
-                      {" "}
                       <Button
-                        style={{ color: "white", width: "100px" }}
-                        className="bg-primary"
+                        style={{
+                          color: "white",
+                          width: "100px",
+                          fontWeight: "bold",
+                          backgroundColor:
+                            location.pathname === `/${page.toLocaleLowerCase()}`
+                              ? "#f78000"
+                              : " #003049",
+                        }}
                       >
                         {page}
                       </Button>
@@ -165,7 +173,17 @@ function NavBar() {
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 <Link to={page.toLocaleLowerCase()}>
-                  <Button style={{ color: "white" }}>{page}</Button>
+                  <Button
+                    style={{
+                      color: "white",
+                      fontWeight: "bold",
+                      backgroundColor:
+                        location.pathname === `/${page.toLocaleLowerCase()}` &&
+                        "#f78000",
+                    }}
+                  >
+                    {page}
+                  </Button>
                 </Link>
               </Button>
             ))}

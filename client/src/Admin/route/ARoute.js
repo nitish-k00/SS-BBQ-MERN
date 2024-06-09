@@ -1,20 +1,14 @@
 //
-import { useSelector } from "react-redux";
 import ADashboard from "../components/ADashboard";
 import ACategory from "../components/ACategory";
 import AProduct from "../components/AProduct";
 import AOrder from "../components/AOrder";
 import ACustomer from "../components/ACustomer";
 import { Route, Routes } from "react-router-dom";
-import Login from "../../component/Login";
-import Register from "../../component/Register";
-import Profile from "../../component/Profile";
-import Four04 from "../../component/Four04";
-import { selectUserInfo } from "../../redux/slices/userInfo";
+import Profile from "../../user/component/Profile";
+import Four04 from "../../user/component/Four04";
 
 function ARouteLinks() {
-  const { login, role } = useSelector(selectUserInfo);
-
   return (
     <div
       style={{
@@ -24,12 +18,6 @@ function ARouteLinks() {
     >
       <Routes>
         <Route path="/" element={<ADashboard />} />
-        {!login && !role && (
-          <>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-          </>
-        )}
         <Route path="/dashboard" element={<ADashboard />} />
         <Route path="/category" element={<ACategory />} />
         <Route path="/profile" element={<Profile />} />

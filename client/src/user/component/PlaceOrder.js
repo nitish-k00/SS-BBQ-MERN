@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { modifyUserInfo, selectUserInfo } from "../redux/slices/userInfo";
+import { modifyUserInfo, selectUserInfo } from "../../redux/slices/userInfo";
 import { Button, Container, Row, Col, Spinner } from "react-bootstrap";
 import { Modal } from "antd";
 import EditProfile from "../middleware/profileEditForm";
@@ -172,32 +172,35 @@ function PlaceOrder() {
           >
             Products
           </h2>
-          <p style={{ fontWeight: "bolder" }}>
-            {travelTime !== null
-              ? `Preparing time (15 minutes) +  Travel time (${travelTime} minutes)`
-              : ""}
-          </p>
+
           {cartLoading ? (
             <Spinner animation="border" role="status">
               <span className="visually-hidden">Loading...</span>
             </Spinner>
           ) : (
-            datacart &&
-            datacart.map((data) => (
-              <div
-                key={data._id._id}
-                style={{
-                  padding: "10px",
-                  borderBottom: "1px solid #ddd",
-                  backgroundColor: "#fff",
-                  marginBottom: "10px",
-                }}
-              >
-                <p>
-                  {data._id.name} x {data.quantity}
-                </p>
-              </div>
-            ))
+            <>
+              <p style={{ fontWeight: "bolder" }}>
+                {travelTime !== null
+                  ? `Preparing time (15 minutes) +  Travel time (${travelTime} minutes)`
+                  : ""}
+              </p>
+              {datacart &&
+                datacart.map((data) => (
+                  <div
+                    key={data._id._id}
+                    style={{
+                      padding: "10px",
+                      borderBottom: "1px solid #ddd",
+                      backgroundColor: "#fff",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <p>
+                      {data._id.name} x {data.quantity}
+                    </p>
+                  </div>
+                ))}
+            </>
           )}
         </Col>
         <Button

@@ -7,6 +7,7 @@ import ACustomer from "../components/ACustomer";
 import { Route, Routes } from "react-router-dom";
 import Profile from "../../user/component/Profile";
 import Four04 from "../../user/component/Four04";
+import ACoupon from "../components/ACoupon";
 
 function ARouteLinks() {
   return (
@@ -24,6 +25,7 @@ function ARouteLinks() {
         <Route path="/product" element={<AProduct />} />
         <Route path="/order" element={<AOrder />} />
         <Route path="/customer" element={<ACustomer />} />
+        <Route path="/coupon" element={<ACoupon />} />
         <Route path="*" element={<Four04 />} />
       </Routes>
     </div>

@@ -101,6 +101,7 @@ function Otp({ formData }) {
     try {
       const result = await axios.post("http://localhost:8000/auth/genrateotp", {
         email: formData.email,
+        content: "registration",
       });
       setMessage("New OTP generated");
       setTimer(60);

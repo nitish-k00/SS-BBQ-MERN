@@ -102,3 +102,53 @@ export const deleteProduct = async (Product) => {
     return toast.error(error.response?.data?.message);
   }
 };
+
+export const createCoupon = async (newCoupon) => {
+  try {
+    const { data } = await axios.post(
+      " http://localhost:8000/auth/createCoupons",
+      { newCoupon }
+    );
+    toast.success(data?.message);
+    return data.Coupons;
+  } catch (error) {
+    console.log(error.response?.data);
+    return toast.error(error.response?.data?.message);
+  }
+};
+
+export const editCoupon = async (editCoupon) => {
+  try {
+    const { data } = await axios.put(" http://localhost:8000/auth/editCoupon", {
+      editCoupon,
+    });
+    toast.success(data?.message);
+    return data.Coupons;
+  } catch (error) {
+    console.log(error.response?.data);
+    return toast.error(error.response?.data?.message);
+  }
+};
+
+export const deleteCoupon = async (couponId) => {
+  try {
+    const { data } = await axios.delete(
+      " http://localhost:8000/auth/deleteCoupons",
+      { data: { couponId } }
+    );
+    toast.success(data?.message);
+    return data.Coupons;
+  } catch (error) {
+    console.log(error.response?.data);
+    return toast.error(error.response?.data?.message);
+  }
+};
+
+export const allCoupon = async () => {
+  try {
+    const { data } = await axios.get(" http://localhost:8000/auth/allCoupans");
+    return data.coupons;
+  } catch (error) {
+    console.log(error.response?.data);
+  }
+};

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import React from "react";
+import { Routes, Route } from "react-router-dom";
 
 import Login from "../component/Login";
 import Cart from "../component/Cart";
@@ -25,6 +25,8 @@ import ForgotPasswordProtrcted from "../protrctedRoute/ForgotPasswordProtrcted";
 import EnterEmail from "../forgotPassword/EnterEmail";
 import EnterNewPassword from "../forgotPassword/EnterNewPassword";
 import EnterOtp from "../forgotPassword/EnterOtp";
+
+import footerRoutes from "../../footer/FooterRoutes";
 
 function RouteLinks() {
   const { login, role } = useSelector(selectUserInfo);
@@ -93,6 +95,8 @@ function RouteLinks() {
             </ForgotPasswordProtrcted>
           }
         />
+
+        {footerRoutes.map((route) => route)}
       </Routes>
     </div>
   );

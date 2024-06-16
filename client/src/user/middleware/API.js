@@ -38,7 +38,8 @@ const getProduct = async () => {
     const { data } = await axios.get("http://localhost:8000/auth/allProduct");
     return data.product;
   } catch (error) {
-    return error.response?.data?.message;
+    console.log(error.response?.data?.message);
+    return [];
   }
 };
 
@@ -58,7 +59,8 @@ const getCategory = async () => {
     const { data } = await axios.get("http://localhost:8000/auth/allCategory");
     return data.categories;
   } catch (error) {
-    return error.response?.data?.message;
+    console.log(error.response?.data?.message);
+    return [];
   }
 };
 
@@ -138,6 +140,16 @@ const removeFromCart = async (productId) => {
   }
 };
 
+const CouponCartcheck = async () => {
+  try {
+    const { data } = await axios.get(`${BASE_URL}/auth/cartCouponCheack`);
+    toast.success(data?.message);
+    return data;
+  } catch (error) {
+    toast.error(error?.response?.data?.message);
+  }
+};
+
 const getFav = async () => {
   try {
     const { data } = await axios.get("http://localhost:8000/auth/fav");
@@ -183,6 +195,43 @@ const getAdressMapApi = async (lat, lng) => {
   }
 };
 
+const getAllCoupon = async () => {
+  try {
+    const { data } = await axios.get(
+      "http://localhost:8000/auth/getAllCouponUser"
+    );
+    return data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
+const applyCoupon = async (code) => {
+  try {
+    const { data } = await axios.post(
+      "http://localhost:8000/auth/validateCoupans",
+      { code }
+    );
+    return data;
+  } catch (error) {
+    toast.error(error?.response?.data?.message);
+    return [];
+  }
+};
+
+const removeCoupon = async (code) => {
+  try {
+    const { data } = await axios.delete(
+      "http://localhost:8000/auth/removeCoupons",
+      { data: { code } }
+    );
+    return data;
+  } catch (error) {
+    toast.error(error?.response?.data?.message);
+    return [];
+  }
+};
 export {
   profileInfo,
   logout,
@@ -201,4 +250,8 @@ export {
   addAndRemoveFav,
   getFavColours,
   getAdressMapApi,
+  getAllCoupon,
+  applyCoupon,
+  removeCoupon,
+  CouponCartcheck,
 };

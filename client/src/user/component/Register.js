@@ -40,7 +40,7 @@ const Register = () => {
     try {
       const response = await axios.post(
         "http://localhost:8000/auth/genrateotp",
-        { email: formData.email }
+        { email: formData.email, content: "registration" }
       );
       setOtpSent(true);
     } catch (error) {

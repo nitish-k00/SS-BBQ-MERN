@@ -3,7 +3,8 @@ const { sendOTPEmail } = require("../midlleware/Mail");
 
 const generateOTP = async (req, res) => {
   const email = req.body.email || req.session.forgotPasswordEmail;
-  console.log(email);
+  const content = req.body.content;
+  console.log(content, "content");
   if (!email) {
     return res.status(400).json({ message: "Email is required" });
   }
@@ -53,7 +54,7 @@ const generateOTP = async (req, res) => {
       OTPExpiresAt: Date.now() + 60000, // 1 minute
     };
 
-    await sendOTPEmail(email, generatedOTP);
+    await sendOTPEmail(email, generatedOTP, content);
     console.log(generatedOTP);
 
     return res.status(201).json({ code: generatedOTP });

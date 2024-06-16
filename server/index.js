@@ -105,6 +105,7 @@ const categoary = require("./routes/category");
 const product = require("./routes/products");
 const cart = require("./routes/cart");
 const favorites = require("./routes/favourite");
+const coupon = require("./routes/coupons");
 
 // app.use("/", async (req, res) => {
 //   res.send("welcome");
@@ -117,6 +118,7 @@ app.use("/auth", categoary);
 app.use("/auth", product);
 app.use("/auth", cart);
 app.use("/auth", favorites);
+app.use("/auth", coupon);
 
 // Database connection
 mongoose

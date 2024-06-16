@@ -23,6 +23,13 @@ const cartSchema = mongoose.Schema(
     total: {
       type: Number,
     },
+    appliedCouponDiscount: {
+      type: Number,
+    },
+    appliedCoupon: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Coupons",
+    },
   },
   { timestamps: true }
 );

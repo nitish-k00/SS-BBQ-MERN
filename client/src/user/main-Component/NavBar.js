@@ -122,7 +122,7 @@ function NavBar() {
                           fontWeight: "bold",
                           backgroundColor:
                             location.pathname === `/${page.toLocaleLowerCase()}`
-                              ? "#f78000"
+                              ? "#913b3bfc"
                               : " #003049",
                         }}
                       >
@@ -179,7 +179,7 @@ function NavBar() {
                       fontWeight: "bold",
                       backgroundColor:
                         location.pathname === `/${page.toLocaleLowerCase()}` &&
-                        "#f78000",
+                        "#913b3bfc",
                     }}
                   >
                     {page}

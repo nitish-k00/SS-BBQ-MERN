@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { getCart, updateQuantatiy, removeFromCart } from "../middleware/API";
+import {
+  getCart,
+  updateQuantatiy,
+  removeFromCart,
+  CouponCartcheck,
+} from "../middleware/API";
 import { CircularProgress } from "@mui/material";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -10,6 +15,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Button, Container, Form, Spinner } from "react-bootstrap";
 import { Grid } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CouponApply from "../middleware/CouponApply";
 
 function Cart() {
   const [cartValue, setCartValue] = useState({});
@@ -17,6 +23,7 @@ function Cart() {
   const [loadingQuantity, setLoadingQuantity] = useState(false);
   const [isIndex, setIndex] = useState("");
   const [loadingRemove, setLoadingRemove] = useState(false);
+  const [loadingCheck, setLoadingCheck] = useState(false);
   const navigate = useNavigate();
 
   // console.log(cartValue, "cart");
@@ -75,12 +82,23 @@ function Cart() {
     }, 0);
   };
 
-  const CouponDiscount = () => {
+  const ShippingFee = () => {
     return 0;
   };
 
-  const ShippingFee = () => {
-    return 0;
+  const placeorderCheack = async () => {
+    setLoadingCheck(true);
+    try {
+      const response = await CouponCartcheck();
+      if (response.change) {
+        setCartValue(response.userCart);
+      } else {
+        navigate("/placeorder", { state: { fromCart: true } });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setLoadingCheck(false);
   };
 
   return (
@@ -239,9 +257,16 @@ function Cart() {
 
               <div className="col-md  bg-dark text-white p-3">
                 <div className="price-details-container">
+                  <div className="price-detail">
+                    <CouponApply
+                      setCartValue={setCartValue}
+                      cartValue={cartValue}
+                    />
+                  </div>
                   <p className="price-details-heading">
                     PRICE DETAILS ({cartValue?.products?.length} items)
                   </p>
+
                   <div className="price-details">
                     <div className="price-detail">
                       <span>Total MRP</span>
@@ -254,7 +279,15 @@ function Cart() {
                       </span>
                     </div>
                     <div className="price-detail">
-                      <span>Shipping Fee</span>
+                      <span>Coupon</span>
+                      <span>
+                        {cartValue?.appliedCouponDiscount !== undefined
+                          ? `- Rs.${cartValue?.appliedCouponDiscount}`
+                          : "Rs.0"}
+                      </span>
+                    </div>
+                    <div className="price-detail">
+                      <span>Delivery Fee</span>
                       <span>Rs.{ShippingFee()}</span>
                     </div>
                     <hr />
@@ -272,11 +305,10 @@ function Cart() {
                           fontSize: "20px",
                           fontWeight: "bolder",
                         }}
-                        onClick={() =>
-                          navigate("/placeorder", { state: { fromCart: true } })
-                        }
+                        onClick={placeorderCheack}
+                        disabled={loadingCheck}
                       >
-                        Place Order
+                        Place Order {loadingCheck && <Spinner size="sm" />}
                       </Button>
                     </div>
                   </div>

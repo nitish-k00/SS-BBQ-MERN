@@ -20,6 +20,7 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import Logout from "../../user/component/logout";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import CategoryIcon from "@mui/icons-material/Category";
 import CoffeeIcon from "@mui/icons-material/Coffee";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
@@ -177,6 +178,19 @@ export default function PersistentDrawerLeft() {
                   <CoffeeIcon />
                 </ListItemIcon>
                 <ListItemText primary="Product" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem
+              disablePadding
+              component={Link}
+              to="/coupon"
+              onClick={handleDrawerClose}
+            >
+              <ListItemButton>
+                <ListItemIcon>
+                  <LocalOfferIcon />
+                </ListItemIcon>
+                <ListItemText primary="Coupons" />
               </ListItemButton>
             </ListItem>
             <ListItem

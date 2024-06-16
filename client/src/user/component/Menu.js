@@ -39,38 +39,41 @@ function Menu() {
 
   const cateFilter = (value) => {
     const filteredCategories = categorys.filter((cate) =>
-      cate.name.toLowerCase().includes(value.toLowerCase())
+      cate?.name?.toLowerCase().includes(value?.toLowerCase())
     );
     setFilterCategory(filteredCategories);
   };
 
   useEffect(() => {
+    if (products) {
+    }
     const productFilter = () => {
+      if (!Array.isArray(products)) return;
       let filteredProducts = [...products];
 
       if (selectedCategory) {
-        filteredProducts = filteredProducts.filter((data) =>
-          data.category.name
+        filteredProducts = filteredProducts?.filter((data) =>
+          data?.category?.name
             .toLowerCase()
-            .includes(selectedCategory.toLowerCase())
+            .includes(selectedCategory?.toLowerCase())
         );
       }
 
       if (productSearch) {
-        filteredProducts = filteredProducts.filter((data) =>
-          data.name.toLowerCase().includes(productSearch)
+        filteredProducts = filteredProducts?.filter((data) =>
+          data?.name?.toLowerCase().includes(productSearch)
         );
       }
 
       if (priceChange) {
-        filteredProducts = filteredProducts.filter(
-          (data) => data.discountPrice <= priceChange
+        filteredProducts = filteredProducts?.filter(
+          (data) => data?.discountPrice <= priceChange
         );
       }
 
       if (selectedDiscount) {
-        filteredProducts = filteredProducts.filter(
-          (data) => data.discount === selectedDiscount
+        filteredProducts = filteredProducts?.filter(
+          (data) => data?.discount === selectedDiscount
         );
       }
 
@@ -88,11 +91,12 @@ function Menu() {
 
   useEffect(() => {
     const filterCategories = () => {
+      if (!Array.isArray(products) || !Array.isArray(fetchCate)) return;
       const productCategoryNames = new Set(
-        products.map((data) => data.category.name)
+        products.map((data) => data?.category?.name)
       );
-      const filteredCategories = fetchCate.filter((category) =>
-        productCategoryNames.has(category.name)
+      const filteredCategories = fetchCate?.filter((category) =>
+        productCategoryNames?.has(category?.name)
       );
       setCategorys(filteredCategories);
       setFilterCategory(filteredCategories);
@@ -119,7 +123,7 @@ function Menu() {
   useEffect(() => {
     const priceRange = () => {
       const setOfDiacountPrice = new Set(
-        products.map((data) => data.discountPrice)
+        products?.map((data) => data?.discountPrice)
       );
       const min = Math.min(...setOfDiacountPrice);
       const max = Math.max(...setOfDiacountPrice);
@@ -141,11 +145,11 @@ function Menu() {
   useEffect(() => {
     const discountPercentage = () => {
       const uniquePercentages = [
-        ...new Set(products.map((data) => data.discount)),
+        ...new Set(products?.map((data) => data.discount)),
       ];
-      const length = uniquePercentages.length;
+      const length = uniquePercentages?.length;
       if (uniquePercentages[length - 1] === 0) {
-        setDiscount(uniquePercentages.slice(0, -1));
+        setDiscount(uniquePercentages?.slice(0, -1));
       } else {
         setDiscount(uniquePercentages);
       }
@@ -175,6 +179,8 @@ function Menu() {
     }
   }, [userData]);
 
+  console.log(products);
+
   return (
     <div>
       {loading ? (
@@ -197,8 +203,11 @@ function Menu() {
               backgroundColor: "#f78000",
               color: "white",
               fontWeight: "bolder",
+              opacity: products?.length === 0 ? 0.5 : 1,
+              pointerEvents: products?.length === 0 ? "none" : "auto",
             }}
             className="ms-2 my-3"
+            disabled={products?.length === 0}
             onClick={() => setFilterOpen(!filterOpen)}
           >
             FILTER
@@ -208,8 +217,11 @@ function Menu() {
               <div
                 className="col-md-4 col-lg-3 pe-5 mb-5"
                 style={{
-                  height: "70vh",
+                  height: "80vh",
                   overflowY: "scroll",
+                  backgroundColor: "#f8f9fa",
+                  padding: "20px",
+                  boxShadow: "0 0 10px #0000001a",
                 }}
               >
                 <h5>CATEGORY</h5>
@@ -218,6 +230,7 @@ function Menu() {
                   variant="outlined"
                   placeholder="Search category"
                   onChange={(e) => cateFilter(e.target.value)}
+                  style={{ backgroundColor: "white" }}
                 />
                 <div
                   className="my-2"
@@ -227,6 +240,7 @@ function Menu() {
                       "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px",
                     height: "30vh",
                     overflowY: "scroll",
+                    backgroundColor: "white",
                   }}
                 >
                   {filterCategory?.map((cate) => (
@@ -240,7 +254,7 @@ function Menu() {
                             onChange={() => selectCategory(cate.name)}
                           />
                         }
-                        label={cate.name}
+                        label={cate.name.toUpperCase()}
                       />
                     </div>
                   ))}
@@ -270,6 +284,7 @@ function Menu() {
                         "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px",
                       height: "auto",
                       overflowY: "scroll",
+                      backgroundColor: "white",
                     }}
                   >
                     {discount?.map((dis, index) => (
@@ -303,7 +318,7 @@ function Menu() {
                   className="mb-4"
                 />
 
-                {productFiltered.length !== 0 ? (
+                {productFiltered?.length !== 0 ? (
                   productFiltered?.map((product) => (
                     <ProductBox
                       key={product._id}

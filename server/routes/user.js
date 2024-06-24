@@ -7,6 +7,8 @@ const {
   GetForgotPasswordEmail,
   forgotPasswordOtpCheack,
   NewPaaword,
+  GetAllUsers,
+  GetSingleUsers,
 } = require("../controller/user");
 const { tokenCheck } = require("../midlleware/tokenCheack");
 const { generateOTP } = require("../midlleware/genateOtp");
@@ -24,10 +26,12 @@ route.post("/login", login);
 route.post("/genrateotp", allReadyRegisterd, generateOTP);
 route.post("/logout", tokenCheck, logout);
 route.post("/removeUiToken", uiToken);
-route.post("/GetForgotPasswordEmail", GetForgotPasswordEmail,generateOTP);
+route.post("/GetForgotPasswordEmail", GetForgotPasswordEmail, generateOTP);
 route.post("/forgotPasswordOtpCheack", forgotPasswordOtpCheack);
 route.post("/NewPaaword", NewPaaword);
 route.post("/genrateotpForgotPassword", generateOTP);
+route.get("/GetAllUsers", GetAllUsers);
+route.get("/GetSingleUsers/:id", GetSingleUsers);
 
 route.get(
   "/google",

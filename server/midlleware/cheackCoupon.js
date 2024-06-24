@@ -2,6 +2,7 @@ const CouponModel = require("../model/coupons");
 const redisClint = require("../redisClient");
 
 const checkAndUpdateCoupon = async (userCart, cacheCart) => {
+  console.log(userCart.total);
   if (!userCart.appliedCoupon) return; // No coupon applied, nothing to check
 
   const coupon = await CouponModel.findById(userCart.appliedCoupon);

@@ -16,6 +16,7 @@ function CouponApply({ setCartValue, cartValue }) {
     const fetchCoupons = async () => {
       try {
         const response = await getAllCoupon();
+        console.log(response.coupons,"rrrr")
         setAllCoupons(response.coupons);
       } catch (error) {
         console.error("Failed to fetch coupons:", error);

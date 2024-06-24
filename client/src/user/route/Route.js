@@ -9,13 +9,13 @@ import Profile from "../component/Profile";
 import Register from "../component/Register";
 import Favourite from "../component/Favourite";
 import Four04 from "../component/Four04";
-import Account from "../component/Account";
+import Orders from "../component/Orders";
 //
 import { selectUserInfo } from "../../redux/slices/userInfo";
 import { useSelector } from "react-redux";
 import SingleProductPage from "../component/SingleProductPage";
 import PlaceOrder from "../component/PlaceOrder";
-import Payment from "../component/Payment";
+
 //
 import CartProtrcted from "../protrctedRoute/CartProtrcted";
 import ForgotPasswordProtrcted from "../protrctedRoute/ForgotPasswordProtrcted";
@@ -53,20 +53,12 @@ function RouteLinks() {
         <Route path="/favourites" element={<Favourite />} />
         <Route path="*" element={<Four04 />} />
         <Route path="/menu/:id" element={<SingleProductPage />} />
-        <Route path="/account" element={<Account />} />
+        <Route path="/Orders" element={<Orders />} />
         <Route
           path="/placeorder"
           element={
             <CartProtrcted>
               <PlaceOrder />
-            </CartProtrcted>
-          }
-        />
-        <Route
-          path="/payment"
-          element={
-            <CartProtrcted>
-              <Payment />
             </CartProtrcted>
           }
         />

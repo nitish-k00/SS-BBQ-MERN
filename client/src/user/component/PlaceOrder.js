@@ -8,6 +8,7 @@ import { editProfile, getCartcheack } from "../middleware/API";
 import { useNavigate } from "react-router-dom";
 import L from "leaflet";
 import "leaflet-routing-machine";
+import handlePayment from "../middleware/payment";
 
 function PlaceOrder() {
   const userData = useSelector(selectUserInfo);
@@ -22,7 +23,7 @@ function PlaceOrder() {
   const [datacart, setDatacart] = useState([]);
   const [cartLoading, setCartLoading] = useState(false);
   const [travelTime, setTravelTime] = useState(null);
-
+  const [checkOutLoading, setCheckOutLoading] = useState(false);
   //   console.log(editData);
 
   const onclickEditProfile = async () => {
@@ -37,15 +38,29 @@ function PlaceOrder() {
     setLoading(false);
   };
 
-  const goToPamentPage = () => {
+  const onSucess = () => {
+    navigate("/menu");
+  };
+
+  const goToPamentPage = async () => {
     if (
       userData.latitude &&
       userData.longitude &&
       userData.address &&
       userData.phoneNo
     ) {
-      navigate("/payment", { state: { fromPlaceOrder: true } });
       setMessage("");
+      setCheckOutLoading(true);
+      if (datacart.total) {
+        await handlePayment(
+          datacart.total,
+          userData.name,
+          userData.email,
+          userData.phoneNo,
+          onSucess
+        );
+      }
+      setCheckOutLoading(false);
     } else {
       setMessage("Allow location by editing your profile.");
     }
@@ -109,10 +124,10 @@ function PlaceOrder() {
     }
   }, [userData]);
 
-  //   console.log(datacart);
+  // console.log(datacart);
 
   return (
-    <Container style={{ marginTop: "50px" }}>
+    <Container style={{ marginTop: "50px", marginBottom: "50px" }}>
       <Row>
         <Col md={6} style={{ marginBottom: "20px" }}>
           <h3
@@ -178,14 +193,25 @@ function PlaceOrder() {
               <span className="visually-hidden">Loading...</span>
             </Spinner>
           ) : (
-            <>
+            <div
+              style={{
+                marginTop: "10px",
+                padding: "20px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                backgroundColor: "#f9f9f9",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+            >
               <p style={{ fontWeight: "bolder" }}>
                 {travelTime !== null
                   ? `Preparing time (15 minutes) +  Travel time (${travelTime} minutes)`
                   : ""}
               </p>
-              {datacart &&
-                datacart.map((data) => (
+              {datacart.products &&
+                datacart.products.map((data) => (
                   <div
                     key={data._id._id}
                     style={{
@@ -200,23 +226,24 @@ function PlaceOrder() {
                     </p>
                   </div>
                 ))}
-            </>
+            </div>
           )}
         </Col>
         <Button
           variant="success"
           style={{
             maxWidth: "90%",
-            margin: "20px auto",
+            margin: "50px auto",
             display: "block",
             fontSize: "20px",
             fontWeight: "bolder",
             backgroundColor: "#f78000",
             border: "none",
           }}
+          disabled={checkOutLoading}
           onClick={goToPamentPage}
         >
-          Continue
+          Check Out {checkOutLoading && <Spinner size="sm" />}
         </Button>
       </Row>
 

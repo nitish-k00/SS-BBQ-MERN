@@ -152,3 +152,123 @@ export const allCoupon = async () => {
     console.log(error.response?.data);
   }
 };
+
+export const allOrders = async (currentPage) => {
+  try {
+    const { data } = await axios.get(
+      `http://localhost:8000/auth/allOrders?page=${currentPage}`
+    );
+    return data;
+  } catch (error) {
+    console.log(error.response?.data);
+  }
+};
+
+export const allTodayOrders = async () => {
+  try {
+    const { data } = await axios.get("http://localhost:8000/auth/todayOrders");
+    return data.orders;
+  } catch (error) {
+    console.log(error.response?.data);
+  }
+};
+
+export const singleOrders = async (orderId) => {
+  try {
+    const { data } = await axios.get(
+      `http://localhost:8000/auth/singleOrder/${orderId}`
+    );
+    return data;
+  } catch (error) {
+    console.log(error.response?.data);
+  }
+};
+
+export const deliveryStatusChange = async (orderId, status, productId) => {
+  try {
+    const { data } = await axios.put(
+      `http://localhost:8000/auth/deliveryStatusChange/${orderId}`,
+      { status, productId }
+    );
+    return data;
+  } catch (error) {
+    console.log(error.response?.data);
+  }
+};
+
+export const GetAllUsers = async () => {
+  try {
+    const { data } = await axios.get(" http://localhost:8000/auth/GetAllUsers");
+    return data.users;
+  } catch (error) {
+    console.log(error.response?.data);
+  }
+};
+
+export const GetSingleUsers = async (userId) => {
+  try {
+    const { data } = await axios.get(
+      ` http://localhost:8000/auth/GetSingleUsers/${userId}`
+    );
+    return data.users;
+  } catch (error) {
+    console.log(error.response?.data);
+  }
+};
+
+export const userOrders = async (userId) => {
+  try {
+    const { data } = await axios.get(
+      ` http://localhost:8000/auth/GetSingleUsersOrders/${userId}`
+    );
+    return data;
+  } catch (error) {
+    toast.error(error?.response?.data?.message);
+    return [];
+  }
+};
+
+export const CouponCartcheck = async () => {
+  try {
+    const { data } = await axios.get(
+      "http://localhost:8000//auth/cartCouponCheack"
+    );
+    toast.success(data?.message);
+    return data;
+  } catch (error) {
+    toast.error(error?.response?.data?.message);
+  }
+};
+
+export const allOrdersDate = async (currentDate) => {
+  try {
+    const { data } = await axios.get(
+      `http://localhost:8000/auth/allOrdersDate?date=${currentDate}`
+    );
+    return data;
+  } catch (error) {
+    console.log(error.response?.data);
+  }
+};
+
+export const ordersTodayData = async () => {
+  try {
+    const { data } = await axios.get(
+      "http://localhost:8000/auth/ordersTodayData"
+    );
+    return data;
+  } catch (error) {
+    console.log(error.response?.data);
+  }
+};
+
+export const ProductNameQuantity = async () => {
+  try {
+    const { data } = await axios.get(
+      "http://localhost:8000/auth/ProductNameQuantity"
+    );
+    return data.product;
+  } catch (error) {
+    console.log(error.response?.data);
+  }
+};

@@ -8,6 +8,9 @@ import { Route, Routes } from "react-router-dom";
 import Profile from "../../user/component/Profile";
 import Four04 from "../../user/component/Four04";
 import ACoupon from "../components/ACoupon";
+import OrderDetail from "../middleware/OrderInfoTable";
+import UserInfo from "../middleware/UserInfo";
+import AAnalytics from "../components/AAnalytics";
 
 function ARouteLinks() {
   return (
@@ -24,8 +27,11 @@ function ARouteLinks() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/product" element={<AProduct />} />
         <Route path="/order" element={<AOrder />} />
+        <Route path="/singleOrder/:id" element={<OrderDetail />} />
+        <Route path="/userInfo/:id" element={<UserInfo />} />
         <Route path="/customer" element={<ACustomer />} />
         <Route path="/coupon" element={<ACoupon />} />
+        <Route path="/analytics" element={<AAnalytics />} />
         <Route path="*" element={<Four04 />} />
       </Routes>
     </div>

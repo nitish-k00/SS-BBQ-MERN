@@ -184,6 +184,59 @@ const NewPaaword = async (req, res) => {
   }
 };
 
+const GetAllUsers = async (req, res) => {
+  try {
+    const allUsers = await userModel.find({ role: 0 });
+
+    if (!allUsers) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const formattedUsers = allUsers.map((data) => {
+      return {
+        id: data._id,
+        name: data.name,
+        email: data.email,
+        address: data.address,
+        MapAddress: data.MapAddress,
+        phone: data.phoneNo,
+      };
+    });
+
+    return res
+      .status(200)
+      .json({ message: "all users", users: formattedUsers });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+const GetSingleUsers = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const allUsers = await userModel.findById(userId);
+
+    if (!allUsers) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { _id, name, email, address, MapAddress, phoneNo } =
+      allUsers.toObject();
+
+    const users = {
+      id: _id,
+      name: name,
+      email: email,
+      address: address,
+      MapAddress: MapAddress,
+      phone: phoneNo,
+    };
+    return res.status(200).json({ message: "all users", users: users });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   register,
   login,
@@ -192,4 +245,6 @@ module.exports = {
   GetForgotPasswordEmail,
   forgotPasswordOtpCheack,
   NewPaaword,
+  GetAllUsers,
+  GetSingleUsers,
 };

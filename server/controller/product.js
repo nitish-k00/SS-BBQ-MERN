@@ -1,4 +1,5 @@
 const cartModel = require("../model/cart");
+const favouriteModel = require("../model/favourite");
 const productModel = require("../model/product");
 const redisClient = require("../redisClient");
 
@@ -115,6 +116,20 @@ const updateProduct = async (req, res) => {
     // Update the cache
     await redisClient.setEx("products", 3600, JSON.stringify(products));
 
+    const allFavourites = await favouriteModel.find().populate("products");
+
+    // Update Redis with all favorites
+    await Promise.all(
+      allFavourites.map(async (favProduct) => {
+        const cacheKeyFav = `fav${favProduct.userId}`;
+        await redisClient.setEx(
+          cacheKeyFav,
+          3600,
+          JSON.stringify(favProduct.products)
+        );
+      })
+    );
+
     return res
       .status(200)
       .json({ message: "product updated successfully", product: products });
@@ -165,6 +180,17 @@ const deleteProduct = async (req, res) => {
     // Update the cache
     await redisClient.setEx("products", 3600, JSON.stringify(products));
 
+    const allFavourites = await favouriteModel.find().populate("products");
+    await Promise.all(
+      allFavourites.map(async (favProduct) => {
+        const cacheKeyFav = `fav${favProduct.userId}`;
+        await redisClient.setEx(
+          cacheKeyFav,
+          3600,
+          JSON.stringify(favProduct.products)
+        );
+      })
+    );
     return res
       .status(200)
       .json({ message: "Product deleted successfully", product: products });
@@ -281,6 +307,27 @@ const specialProduct = async (req, res) => {
   }
 };
 
+const ProductNameQuantity = async (req, res) => {
+  try {
+    const products = await productModel.find();
+
+    const formattedProducts = products.map((data) => {
+      return {
+        name: data.name,
+        quantity: data.quantity,
+      };
+    });
+
+    return res.status(200).json({
+      message: "product recived successfully",
+      product: formattedProducts,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(501).json({ message: "internal server error" });
+  }
+};
+
 module.exports = {
   allProduct,
   createProduct,
@@ -289,4 +336,5 @@ module.exports = {
   singleProduct,
   CategoryProduct,
   specialProduct,
+  ProductNameQuantity,
 };

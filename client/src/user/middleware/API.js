@@ -232,6 +232,17 @@ const removeCoupon = async (code) => {
     return [];
   }
 };
+
+const userOrders = async () => {
+  try {
+    const { data } = await axios.get("http://localhost:8000/auth/userOrders");
+    return data;
+  } catch (error) {
+    toast.error(error?.response?.data?.message);
+    return [];
+  }
+};
+
 export {
   profileInfo,
   logout,
@@ -254,4 +265,5 @@ export {
   applyCoupon,
   removeCoupon,
   CouponCartcheck,
+  userOrders,
 };

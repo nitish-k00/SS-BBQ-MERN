@@ -24,6 +24,7 @@ import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import CategoryIcon from "@mui/icons-material/Category";
 import CoffeeIcon from "@mui/icons-material/Coffee";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import BarChartIcon from "@mui/icons-material/BarChart";
 import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import { Avatar } from "antd";
 import { useSelector } from "react-redux";
@@ -217,6 +218,19 @@ export default function PersistentDrawerLeft() {
                   <PeopleAltIcon />
                 </ListItemIcon>
                 <ListItemText primary="Customer" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem
+              disablePadding
+              component={Link}
+              to="/analytics"
+              onClick={handleDrawerClose}
+            >
+              <ListItemButton>
+                <ListItemIcon>
+                  <BarChartIcon />
+                </ListItemIcon>
+                <ListItemText primary="Analytics" />
               </ListItemButton>
             </ListItem>
           </div>

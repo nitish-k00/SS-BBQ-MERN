@@ -234,12 +234,12 @@ function NavBar() {
                     onClick={handleCloseUserMenu}
                     sx={{ textAlign: "center" }}
                   >
-                    <Link to="/account">
+                    <Link to="/Orders">
                       <Button
                         className="bg-primary"
                         style={{ color: "white", width: "100px" }}
                       >
-                        Account
+                        Orders
                       </Button>
                     </Link>
                   </MenuItem>

@@ -26,7 +26,7 @@ function Cart() {
   const [loadingCheck, setLoadingCheck] = useState(false);
   const navigate = useNavigate();
 
-  // console.log(cartValue, "cart");
+  console.log(cartValue, "cart");
 
   const handleQuantityChange = async (id, value) => {
     setLoadingQuantity(true);
@@ -275,7 +275,7 @@ function Cart() {
                     <div className="price-detail">
                       <span>Discount on MRP</span>
                       <span>
-                        - Rs.{Math.floor(TotalMRP() - DiscountonMRP())}
+                        - Rs.{(TotalMRP() - DiscountonMRP()).toFixed(2)}
                       </span>
                     </div>
                     <div className="price-detail">

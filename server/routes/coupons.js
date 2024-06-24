@@ -22,5 +22,3 @@ route.delete("/deleteCoupons", cheackIsAdmin, deleteCoupon);
 route.put("/editCoupon", cheackIsAdmin, editCoupon);
 
 module.exports = route;
-
-cheackIsAdmin;

@@ -187,9 +187,11 @@ const cartcheack = async (req, res) => {
     const cartProduct = await cartModel
       .findOne({ userId })
       .populate({ path: "products._id", select: "name" });
+
+    // console.log(cartProduct);
     return res
       .status(200)
-      .json({ message: "Products resived", cartProduct: cartProduct.products });
+      .json({ message: "Products resived", cartProduct: cartProduct });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
     console.log(error);
@@ -211,19 +213,18 @@ const cartCouponCheack = async (req, res) => {
 
     if (!userCart.appliedCoupon) {
       // No coupon applied, return current cart
+      console.log(userCart.total);
       return res
         .status(200)
         .json({ message: "No coupon applied", userCart, change: false });
     }
 
     const coupon = await CouponModel.findById(userCart.appliedCoupon);
+    console.log(coupon.minOrderValue, userCart.total);
 
-    if (
-      !coupon ||
-      !coupon.active ||
-      coupon.expiryDate < new Date() ||
-      coupon.minOrderValue > userCart.total
-    ) {
+    // coupon.minOrderValue > userCart.total
+
+    if (!coupon || !coupon.active || coupon.expiryDate < new Date()) {
       // Coupon is no longer valid
       userCart.appliedCoupon = undefined;
       userCart.appliedCouponDiscount = undefined;

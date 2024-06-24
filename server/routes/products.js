@@ -7,6 +7,7 @@ const {
   singleProduct,
   CategoryProduct,
   specialProduct,
+  ProductNameQuantity,
 } = require("../controller/product");
 const { tokenCheck } = require("../midlleware/tokenCheack");
 const { cheackIsAdmin } = require("../midlleware/adminCheack");
@@ -19,5 +20,7 @@ route.get("/specialProduct", specialProduct);
 route.post("/createProduct", tokenCheck, cheackIsAdmin, createProduct);
 route.put("/updateProduct/:id", tokenCheck, cheackIsAdmin, updateProduct);
 route.delete("/deleteProduct/:id", tokenCheck, cheackIsAdmin, deleteProduct);
+route.get("/ProductNameQuantity", ProductNameQuantity);
+
 
 module.exports = route;

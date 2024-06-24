@@ -106,6 +106,8 @@ const product = require("./routes/products");
 const cart = require("./routes/cart");
 const favorites = require("./routes/favourite");
 const coupon = require("./routes/coupons");
+const payment = require("./routes/payments");
+const orders = require("./routes/orders");
 
 // app.use("/", async (req, res) => {
 //   res.send("welcome");
@@ -119,6 +121,8 @@ app.use("/auth", product);
 app.use("/auth", cart);
 app.use("/auth", favorites);
 app.use("/auth", coupon);
+app.use("/auth", payment);
+app.use("/auth", orders);
 
 // Database connection
 mongoose

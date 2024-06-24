@@ -129,6 +129,7 @@ const deleteCoupon = async (req, res) => {
 const getAllCoupon = async (req, res) => {
   try {
     const Coupons = await CouponModel.find();
+    console.log(Coupons);
     return res.status(200).json({ coupons: Coupons });
   } catch (error) {
     console.log(error);
@@ -139,12 +140,15 @@ const getAllCouponUser = async (req, res) => {
   const userId = req.user?._id;
   try {
     const userUsedCoupons = (await userCouponModel.findOne({ userId })) || [];
+
+    console.log(userUsedCoupons, "f");
     const Coupons = await CouponModel.find({ active: true });
 
-    if (userUsedCoupons.length > 0) {
+    if (userUsedCoupons.usedCoupons?.length > 0) {
       const availableCoupons = Coupons.filter(
         (coupons) => !userUsedCoupons.usedCoupons.includes(coupons._id)
       );
+
       return res.status(200).json({ coupons: availableCoupons });
     } else {
       return res.status(200).json({ coupons: Coupons });
